@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from interface.routes import routes
 
-app = FastAPI()
+app = FastAPI(
+    title="Backend de Pagamentos",
+    description="Sistema de pagamentos de boletos",
+    version="1.0.0"
+)
 
 app.include_router(router=routes)
 
