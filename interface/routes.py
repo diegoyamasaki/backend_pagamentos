@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from interface.home.home_interface import home_router
-from interface.payment.payment_interface import payment_router
+from interface.payment.payment_interface import billet_payment_router
 
 routes = APIRouter()
 
-routes.include_router(home_router, prefix="", tags=["home"])
-routes.include_router(payment_router, prefix="/pagamentos", tags=["pagamentos"])
+routes.include_router(home_router, prefix="", tags=["Home"])
+routes.include_router(billet_payment_router, prefix="/pagamentos", tags=["Boletos"])

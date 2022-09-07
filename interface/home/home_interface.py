@@ -4,5 +4,5 @@ home_router = APIRouter()
 
 
 @home_router.get("/")
-async def home():
+async def health_check():
     return {"msg": "backend pagamentos"}

@@ -3,7 +3,7 @@ from interface.routes import routes
 
 app = FastAPI(
     title="Backend de Pagamentos",
-    description="Sistema de pagamentos de boletos",
+    description="Sistema de pagamentos",
     version="1.0.0"
 )
 

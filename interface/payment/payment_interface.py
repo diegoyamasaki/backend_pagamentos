@@ -1,15 +1,15 @@
 from fastapi import APIRouter
-from domain.entities.payment import Payment
+from domain.entities.billet_payment import BilletPayment
 
-payment_router = APIRouter(prefix="/boletos")
+billet_payment_router = APIRouter(prefix="/boletos")
 
 
-@payment_router.post("/bancarios")
-async def pagamentos_bancarios(payment: Payment):
+@billet_payment_router.post("/bancario")
+async def pagamento_de_boletos_bancarios(billet_payment: BilletPayment):
     return {"msg": "pagamentos bancarios"}
 
 
-@payment_router.post("/consumo")
-async def pagamentos_de_consumo(payment: Payment):
+@billet_payment_router.post("/consumo")
+async def pagamento_de_boletos_de_consumo(billet_payment: BilletPayment):
     return {"msg": "pagamentos de consumo"}
 
