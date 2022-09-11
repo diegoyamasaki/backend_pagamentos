@@ -1,6 +1,8 @@
-from pydantic import BaseModel
+from typing import Optional
+from abc import ABC
+from sqlalchemy import Column, String, Integer
 
-
-class BilletPayment(BaseModel):
-    billet: str = "826500000011323116990009002022153320476101001040"
-    amount: str = "70.24"
+class BilletPayment(ABC):
+    id = Column(Integer, primary_key=True, index=True)
+    billet = Column(String)
+    amount =Column(String)
