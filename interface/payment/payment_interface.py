@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from domain.entities.bank_payment import BankPayment
-from domain.entities.consumer_payment import ConsumerPayment
+from domain.schemas.bank_payment import BankPayment
+from domain.schemas.consumer_payment import ConsumerPayment
 
 billet_payment_router = APIRouter(prefix="/boletos")
 
