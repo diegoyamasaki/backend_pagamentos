@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, MetaData
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "sqlite:///payment_database.db"
@@ -18,6 +18,16 @@ Session_Local = sessionmaker(
 
 
 Base = declarative_base()
+
+
+def create_tables():
+    print("create tables")
+    from domain.entities.consumer_payment import ConsumerPayment
+    from domain.entities.bank_payment import BankPayment
+    Base.metadata.create_all(engine)
+
+
+create_tables()
 
 
 async def get_db():
