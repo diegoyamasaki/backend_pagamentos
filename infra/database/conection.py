@@ -22,8 +22,7 @@ Base = declarative_base()
 
 def create_tables():
     print("create tables")
-    from domain.entities.consumer_payment import ConsumerPayment
-    from domain.entities.bank_payment import BankPayment
+    from domain.entities.billet_payment import BilletPayment
     Base.metadata.create_all(engine)
 
 

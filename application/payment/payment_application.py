@@ -1,8 +1,12 @@
 from sqlalchemy.orm import Session
-from domain.entities.bank_payment import BankPayment
-from domain.entities.consumer_payment import ConsumerPayment
+from typing import List
+from domain.entities.billet_payment import BilletPayment
+from domain.enum.billet_type import BilletType
 from shared.notify import Notify
 from shared.observer import Observer
+from application.cashback import CachBackApplication
+from infra.services.payment_service.payment import Payment
+from domain.job.tasks import queue_notify_payment
 
 
 class PaymentApplication(Notify):
@@ -17,34 +21,59 @@ class PaymentApplication(Notify):
     def detach(self, observer: Observer) -> None:
         self._observers.remove(observer)
         
-    def notify(self) -> None:
+    def notify(self, payment: any) -> None:
         for observer in self._observers:
-            observer.update(self)
-
-        
+            observer.update(self, payment)
 
     def __init__(self, database: Session):
-
         self._db = database
+        self.attach(CachBackApplication())
 
-    async def make_payment_bank(self, payment: BankPayment) -> None:
+    @property
+    def payment_service(self):
+        return Payment()
+
+    def make_payment_bank(self, payment: BilletPayment) -> None:
         print("realiza pagamento boleto de banco")
-        bank = BankPayment()
+        bank = BilletPayment()
         bank.billet = payment.billet
         bank.amount = payment.amount
+        bank.billet_type = BilletType.bank
         self._db.add(bank)
         self._db.commit()
+        self.notify_payment(bank.to_json())
         self._db.refresh(bank)
-        self.notify()
         return bank
 
-    async def make_payment_consumer(self, payment: ConsumerPayment) -> None:
+    def make_payment_consumer(self, payment: BilletPayment) -> None:
         print("realiza pagamento boleto de consumo")
-        consumer = ConsumerPayment()
+        consumer = BilletPayment()
         consumer.amount = payment.amount
         consumer.billet = payment.billet
+        consumer.billet_type = BilletType.consumer
         self._db.add(consumer)
         self._db.commit()
+        self.notify_payment(consumer.to_json())
         self._db.refresh(consumer)
-        self.notify()
         return consumer
+
+    def notify_payment(self, payment: any):
+        try:
+            data = self.payment_service.notify_payment(payment)
+            if data:
+                data_payment = self._db.query(BilletPayment).filter(BilletPayment.id == payment['id']).first()
+                data_payment.transaction_id = data['transactiondId']
+                self._db.commit()
+                self.notify(data_payment.to_json())
+        except Exception as e:
+            print('erro! colocando na fila')
+            queue_notify_payment(payment)
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from interface.routes import routes
+from infra.message_broker.rabbitmq import RabbitMq
 
 app = FastAPI(
     title="Backend de Pagamentos",
@@ -20,6 +21,8 @@ app.add_middleware(
 
 app.include_router(router=routes)
 
+app.celery_app = RabbitMq().create_celery()
+celery = app.celery_app
 
 if __name__ == '__main__':
     import uvicorn

@@ -1,5 +1,7 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 from shared.observer import Observer
+from abc import ABC, abstractmethod
+
 
 class Notify(ABC):
 

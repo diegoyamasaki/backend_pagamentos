@@ -1,0 +1,16 @@
+version: "2"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+       - RABBITMQ_DEFAULT_USER=admin
+       - RABBITMQ_DEFAULT_PASS=admin
+       - RABBITMQ_DEFAULT_VHOST=pagamentos
+    ports:
+     - "15672:15672"
+     - "5672:5672"
+     - "25676:25676"
+    volumes:
+     - rabbit_volume:/var/lib/rabbitmq
+volumes:
+ rabbit_volume:
