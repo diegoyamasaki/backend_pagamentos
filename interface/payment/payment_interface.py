@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from infra.database.conection import get_db
+from infra.database.connection import get_db
 from sqlalchemy.orm import Session
 from application.payment.payment_application import PaymentApplication
 from domain.schemas.bank_payment import BankPayment

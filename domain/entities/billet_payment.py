@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, Enum
-from infra.database.conection import Base
+from infra.database.connection import Base
 from domain.enum.billet_type import BilletType
 
 

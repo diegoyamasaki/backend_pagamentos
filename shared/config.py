@@ -11,14 +11,15 @@ def route_task(name, args, kwargs, options, task=None, **kw):
 
 
 class Config:
+    DATABASE_URL = os.environ.get("DATABASE_URL",
+                                  "sqlite:///payment_database.db")
     URL_PAYMENT_SERVICE = os.environ.get("URL_PAYMENT_SERVICE",
                                          "https://run.mocky.io/v3/0bca48f0-16db-4726-96a8-d4206306f698")
-
-    CELERY_BROKER_URL: str = "amqp://admin:admin@localhost:5672/pagamentos"
-
+    CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL",
+                                            "amqp://admin:admin@localhost:5672/pagamentos")
     CELERY_TASK_QUEUES: list = (
         Queue("celery"),
-        Queue("bank_payments")
+        Queue("billet_payments")
     )
     CELERY_TASK_ROUTES = (route_task,)
 

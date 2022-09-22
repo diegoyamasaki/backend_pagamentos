@@ -2,7 +2,7 @@ import json
 from fastapi import APIRouter, Depends
 from application.health_check.health_check import HealthCheckApplication
 from domain.schemas.health_check import HealthCheck
-from infra.database.conection import get_db
+from infra.database.connection import get_db
 from infra.services.payment_service.payment import Payment
 from sqlalchemy.orm import Session
 

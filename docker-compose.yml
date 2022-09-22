@@ -12,5 +12,39 @@ services:
      - "25676:25676"
     volumes:
      - rabbit_volume:/var/lib/rabbitmq
+  app:
+    build: .
+    volumes:
+      - .:/home/app
+    ports:
+      - "8000:8000"
+    environment:
+      - URL_PAYMENT_SERVICE=https://run.mocky.io/v3/0bca48f0-16db-4726-96a8-d4206306f698
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672/pagamentos
+      - DATABASE_URL=sqlite:///payment_database.db
+    depends_on:
+      - rabbitmq
+    networks:
+      - default
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+  worker:
+    build: .
+    volumes:
+      - .:/home/app
+    ports:
+      - "5555:5555"
+    environment:
+      - URL_PAYMENT_SERVICE=https://run.mocky.io/v3/0bca48f0-16db-4726-96a8-d4206306f698
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672/pagamentos
+      - DATABASE_URL=sqlite:///payment_database.db
+      - C_FORCE_ROOT=true
+    depends_on:
+      - rabbitmq
+    networks:
+      - default
+    command: celery -A main.celery worker --loglevel=info -Q billet_payments
 volumes:
  rabbit_volume:
+networks:
+  default:
+    driver: bridge

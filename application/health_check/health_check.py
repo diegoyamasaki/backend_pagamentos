@@ -1,5 +1,5 @@
 from domain.schemas.health_check import HealthCheck
-from requests.exceptions import RequestException
+from httpx import RequestError
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -15,7 +15,7 @@ class HealthCheckApplication:
             db.execute('SELECT 1')
             self._health.database = 'ok'
             self._health.service = await payment_service.check_service()
-        except RequestException:
+        except RequestError:
             self._health.service = "error"
         except SQLAlchemyError:
             self._health.database = 'error'
