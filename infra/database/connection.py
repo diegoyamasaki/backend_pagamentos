@@ -26,7 +26,7 @@ def create_tables():
     Base.metadata.create_all(engine)
 
 
-create_tables()
+#create_tables()
 
 
 async def get_db():
